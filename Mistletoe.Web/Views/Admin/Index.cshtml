@@ -1,0 +1,141 @@
+﻿@using Mistletoe.Models
+@model AdminPageModel
+
+@{
+    ViewBag.Title = "Administrative Landing Page";
+    List<UserModel> usersList = Model.UsersList;
+}
+
+<script src="~/Scripts/Admin/AdminIndex.js"></script>
+
+<div class="container">
+    <h2>Administrative Landing Page</h2>
+    <br />
+
+    @if (Model.UserHasAccess)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Manage Users</h3>
+            </div>
+            <div class="panel-body">
+                @if (usersList.Count > 0)
+                {
+                    <table class="table table-striped">
+                        <tr>
+                            <th>
+                                First Name
+                            </th>
+                            <th>
+                                Last Name
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in usersList)
+                        {
+                            <tr class="@item.StatusColor">
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.StatusForDisplay)
+                                </td>
+                                <td align="center">
+                                    @if (!item.IsActive)
+                                    {
+                                        <a href="#" class="btn btn-primary btn-xs" onclick="javascript:ChangeUserStatus('@item.UserID', true);">Activate</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-default btn-xs" onclick="javascript:DeactivateUser('@item.UserID');">Deactivate</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <div class="bg-danger" style="height: 50px; text-align: center; vertical-align:middle; line-height: 50px; ">No user to display!</div>
+                }
+            </div>
+        </div>
+        <br />
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Manage Global Footer</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2">Static Footer:</label>
+                        <div class="col-sm-10">
+                            @Html.TextAreaFor(model => model.Footer, new { id = "tb_Footer", @class = "form-control", @col = 100 })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button id="btn_SaveFooter" type="button" onclick="javascript:SaveFooter()" class="btn btn-primary">Save &raquo;</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="bg-light" style="height: 50px; text-align: center; vertical-align:middle; line-height: 50px; ">Access denied! Only administrators can access this page.</div>
+    }
+</div>
+<div id="div_Loading" class="form-group" style="text-align: center; display: none;">
+    <img src="~/Images/loading.gif" style="height:300px; width:300px" />
+</div>
+
+<div id="modal_general" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mistletoe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modal_general_message">Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal_decision" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mistletoe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modal_decision_message">Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="javascript:ConfirmDeactivateUser()" class="btn btn-default" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>

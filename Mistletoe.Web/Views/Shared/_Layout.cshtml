@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Mistletoe</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+
+    <link href="~/Content/Summernote/summernote.css" rel="stylesheet" />
+    <script src="~/Content/Summernote/summernote.js"></script>
+
+    <script src="~/Scripts/Globals.js"></script>
+
+    <script src="~/Scripts/jqCron.js"></script>
+    <script src="~/Scripts/jqCron.en.js"></script>
+    <link href="~/Content/jqCron.css" rel="stylesheet" />
+
+    <script src="~/Scripts/moment.min.js"></script>
+</head>
+<body>
+        <header class="navbar navbar-default navbar-fixed-bottom bg-light">
+            <div class="container">
+                <img src="~/Images/MaL_Logo.jpg" height="50" width="50" style="padding:5px" alt="Brand" class="navbar-brand" />
+                @Html.ActionLink("Mistletoe", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <ul id="ul_header" class="nav navbar-nav">
+                    @if (string.IsNullOrEmpty(MvcApplication.UserID) == false)
+                    {
+                        if (MvcApplication.IsAdmin)
+                        {
+                            <li id="li_Admin" class="active">@Html.ActionLink("Admin", "Index", "Admin")</li>
+                        }
+                        <li id="li_Campaign">@Html.ActionLink("Campaigns", "Index", "Campaign")</li>                        
+                    }
+                    else
+                    {
+                        <li class="active" style="padding-left:20px;">
+                            <input id="hdn_PathAndQuery" type="hidden" value="@ViewContext.HttpContext.Request.Url.PathAndQuery" />
+                            <button type="button" class="btn btn-primary navbar-btn" onclick="location.href='@Url.Action("Login", "Account")?returnUrl=' + $('#hdn_PathAndQuery').val()">Login / Signup</button>
+                        </li>
+                    }
+                </ul>
+                @if (string.IsNullOrEmpty(MvcApplication.UserID) == false)
+                {
+                    <figure>
+                        <img alt="UserImage" src="@MvcApplication.UserImage" height="60" width="60"/>
+                        <figcaption>@MvcApplication.UserName</figcaption>
+                        <figcaption>@Html.ActionLink("Logout", "Logout", "Account")</figcaption>
+                    </figure>
+                }
+            </div>
+        </header>
+
+        @RenderBody()
+
+        <hr />
+        <footer class="bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Documentation</strong>
+                        <ul class="list-unstyled">
+                            <li>
+                                @Html.ActionLink("Quick Start", "QuickStart", "Home")
+                            </li>
+                            <li>
+                                @Html.ActionLink("FAQs", "FAQ", "Home")
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Contact</strong>
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="mailto:support@mossandlichens.com?subject=Mistletoe" target="_blank">Email</a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/mossandlichens" target="_blank">Twitter</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-9">
+                        &copy; @DateTime.Now.Year - <a href="https://mossandlichens.com" target="_blank">Moss and Lichens UG</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+        <script>
+        @functions{
+            public string GetAntiForgeryToken()
+            {
+                string cookieToken, formToken;
+                AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return cookieToken + "," + formToken;
+            }
+        }
+        </script>
+        <input type="hidden" id="forgeryToken" value="@GetAntiForgeryToken()" />
+    
+</body>
+</html>

@@ -1,0 +1,166 @@
+﻿@using Mistletoe.Models
+
+@model ManageCampaignsModel
+
+@{
+    ViewBag.Title = "Manage Campaigns";
+    List<CampaignModel> campaignList = Model.CampaignList;
+}
+
+<div class="container">
+    <h2>Manage Campaigns</h2>
+    <br />
+
+    @Html.ActionLink("Create Campaign", "Create", "Campaign", new { @class = "btn btn-primary" })
+    <script src="~/Scripts/Campaign/CampaignManage.js"></script>
+    <br />
+    <br />
+    @Html.HiddenFor(model => model.CampaignIDs, new { id = "hdn_CampaignIDs" })
+
+    @if (campaignList != null && campaignList.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        Campaign Name
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th>
+                        Frequency
+                    </th>
+                    <th>Actions</th>
+                    <th>Template</th>
+                    <th>Runs</th>
+                </tr>
+
+                @foreach (var item in campaignList)
+                {
+                    <tr class="@item.StatusColor">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CampaignName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartDateForDisplay)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndDateForDisplay)
+                        </td>
+                        <td>
+                            <div class="div_Frequency_@item.CampaignID">
+                            </div>
+                            @Html.HiddenFor(modelItem => item.Frequency, new { id = "hdn_Frequency_" + item.CampaignID })
+                        </td>
+                        <td align="center">
+                            @Html.ActionLink("Edit", "Edit", new { CampaignID = item.CampaignID }, new { @class = "btn btn-info btn-xs" })
+                            <br />
+                            <br />
+                            <a href="#" class="btn btn-info btn-xs" onclick="javascript:DeleteCampaign('@item.CampaignID');">Delete</a>
+                            <br />
+                            <br />
+                            @if (!item.IsActive)
+                            {
+                                <a href="#" class="btn btn-info btn-xs" id="lnk_activateCampaign" onclick="javascript:ActivateCampaign('@item.CampaignID');">Activate</a>
+                            }
+                            else
+                            {
+                                <a href="#" class="btn btn-info btn-xs" id="lnk_deactivateCampaign" onclick="javascript:DeactivateCampaign('@item.CampaignID');">Deactivate</a>
+                            }
+                        </td>
+                        <td align="center">
+                            @Html.ActionLink("Edit", "Edit", "Template", new { CampaignID = item.CampaignID }, new { @class = "btn btn-info btn-xs" })
+                            <br />
+                            <br />
+                            <a href="#" class="btn btn-info btn-xs" onclick="javascript:PreviewEmail('@item.CampaignID');">Preview</a>
+                        </td>
+                        <td align="center">
+                            @foreach(var run in item.GetRuns())
+                            {
+                            <div>@run.ToShortDateString() @run.ToShortTimeString()</div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="bg-light" style="height: 50px; text-align: center; vertical-align:middle; line-height: 50px; ">No campaigns to display! Create a campaign by clicking the link above.</div>
+    }
+
+</div>
+
+<div id="div_Loading" class="form-group" style="text-align: center; display: none;">
+    <img src="~/Images/loading.gif" style="height:300px; width:300px" />
+</div>
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mistletoe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="div_ModalMessage">Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="preview_Modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mistletoe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <span style="font-family:Arial, Helvetica, sans-serif; font-weight:bold; font-size:14px">
+                        Sender:
+                    </span>
+                    <span id="span_Preview_Sender"></span>
+                </div>
+                <hr />
+                <div>
+                    <span style="font-family:Arial, Helvetica, sans-serif; font-weight:bold; font-size:14px">
+                        Receiver(s):
+                    </span>
+                    <span id="span_Preview_Receivers"></span>
+                </div>
+                <hr />
+                <div>
+                    <span style="font-family:Arial, Helvetica, sans-serif; font-weight:bold; font-size:14px">
+                        Subject:
+                    </span>
+                    <span id="span_Preview_Subject"></span>
+                </div>
+                <hr />
+                <div>
+                    <span style="font-family:Arial, Helvetica, sans-serif; font-weight:bold; font-size:14px">
+                        Body:
+                    </span><br /><br />
+                    <span id="span_Preview_Body"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="javascript:SendEmail();" type="button" class="btn btn-primary" data-dismiss="modal">Send Email</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

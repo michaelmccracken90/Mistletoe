@@ -1,0 +1,90 @@
+﻿@model Mistletoe.Models.TemplateModel
+
+@{
+    ViewBag.Title = "Edit Template";
+}
+
+<div class="container">
+    <h2>Edit Template</h2>
+    <script src="~/Scripts/Template/TemplateEdit.js"></script>
+
+    @if (ViewBag.UserHasAccess)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Enter Template Details</h3>
+            </div>
+            @Html.HiddenFor(model => model.TemplateID, new { id = "hdn_Template_ID" })
+            @Html.HiddenFor(model => model.CampaignID, new { id = "hdn_Campaign_ID" })
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2">Template Name:</label>
+                        <div class="col-sm-10">
+                            @Html.EditorFor(model => model.TemplateName, new { htmlAttributes = new { id = "tb_Name", @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">Sender:</label>
+                        <div class="col-sm-10">
+                            @Html.EditorFor(model => model.Sender, new { htmlAttributes = new { id = "tb_Sender", @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">Receivers:</label>
+                        <div class="col-sm-10">
+                            @Html.EditorFor(model => model.Receivers, new { htmlAttributes = new { id = "tb_Receivers", @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">Subject:</label>
+                        <div class="col-sm-10">
+                            @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { id = "tb_Subject", @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2">Body:</label>
+                        <div class="col-sm-10">
+                            @Html.HiddenFor(model => model.Body, new { id = "hdn_Body" })
+                            <div id="div_BodyHTML"></div>
+                        </div>
+                    </div>
+                    <div id="div_Loading" class="form-group" style="text-align: center; display: none;">
+                        <img src="~/Images/loading.gif" style="height:300px; width:300px" />
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button id="btn_Save" type="button" onclick="javascript:SaveTemplate()" class="btn btn-primary">Save &raquo;</button>
+                            <input class="btn btn-default" type="button" value="Cancel" onclick="javascript:Cancel()">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="bg-danger" style="height: 50px; text-align: center; vertical-align:middle; line-height: 50px; ">Access denied!</div>
+    }
+
+</div>
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mistletoe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="div_ModalMessage" class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+

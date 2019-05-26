@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Mistletoe.Web.DataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="Campaign_ID" />
+          </Key>
+          <Property Name="Campaign_ID" Type="int" Nullable="false" />
+          <Property Name="User_ID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Start_Date" Type="datetime" Nullable="false" />
+          <Property Name="End_Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Licensing">
+          <Key>
+            <PropertyRef Name="Licensing_ID" />
+          </Key>
+          <Property Name="Licensing_ID" Type="int" Nullable="false" />
+          <Property Name="User_ID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Is_Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Template">
+          <Key>
+            <PropertyRef Name="Template_ID" />
+          </Key>
+          <Property Name="Template_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Campaign_ID" Type="int" Nullable="false" />
+          <Property Name="To_Addresses" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="From_Address" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Subject" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Body" Type="text" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Template_Campaign">
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="1" />
+          <End Role="Template" Type="Self.Template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Campaign">
+              <PropertyRef Name="Campaign_ID" />
+            </Principal>
+            <Dependent Role="Template">
+              <PropertyRef Name="Campaign_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MistletoeWebDataModelStoreContainer">
+          <EntitySet Name="Campaign" EntityType="Self.Campaign" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Licensing" EntityType="Self.Licensing" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Template" EntityType="Self.Template" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Template_Campaign" Association="Self.FK_Template_Campaign">
+            <End Role="Campaign" EntitySet="Campaign" />
+            <End Role="Template" EntitySet="Template" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Mistletoe.Web.DataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="Campaign_ID" />
+          </Key>
+          <Property Name="Campaign_ID" Type="Int32" Nullable="false" />
+          <Property Name="User_ID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Start_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="End_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Template" Relationship="Self.FK_Template_Campaign" FromRole="Campaign" ToRole="Template" />
+        </EntityType>
+        <EntityType Name="Licensing">
+          <Key>
+            <PropertyRef Name="Licensing_ID" />
+          </Key>
+          <Property Name="Licensing_ID" Type="Int32" Nullable="false" />
+          <Property Name="User_ID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Is_Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Template">
+          <Key>
+            <PropertyRef Name="Template_ID" />
+          </Key>
+          <Property Name="Template_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Campaign_ID" Type="Int32" Nullable="false" />
+          <Property Name="To_Addresses" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="From_Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Subject" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Body" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Campaign" Relationship="Self.FK_Template_Campaign" FromRole="Template" ToRole="Campaign" />
+        </EntityType>
+        <Association Name="FK_Template_Campaign">
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="1" />
+          <End Role="Template" Type="Self.Template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Campaign">
+              <PropertyRef Name="Campaign_ID" />
+            </Principal>
+            <Dependent Role="Template">
+              <PropertyRef Name="Campaign_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MistletoeDataEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Campaign" EntityType="Self.Campaign" />
+          <EntitySet Name="Licensing" EntityType="Self.Licensing" />
+          <EntitySet Name="Template" EntityType="Self.Template" />
+          <AssociationSet Name="FK_Template_Campaign" Association="Self.FK_Template_Campaign">
+            <End Role="Campaign" EntitySet="Campaign" />
+            <End Role="Template" EntitySet="Template" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MistletoeWebDataModelStoreContainer" CdmEntityContainer="MistletoeDataEntities">
+          <EntitySetMapping Name="Campaign">
+            <EntityTypeMapping TypeName="Mistletoe.Web.DataModel.Campaign">
+              <MappingFragment StoreEntitySet="Campaign">
+                <ScalarProperty Name="Campaign_ID" ColumnName="Campaign_ID" />
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+                <ScalarProperty Name="Start_Date" ColumnName="Start_Date" />
+                <ScalarProperty Name="End_Date" ColumnName="End_Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Licensing">
+            <EntityTypeMapping TypeName="Mistletoe.Web.DataModel.Licensing">
+              <MappingFragment StoreEntitySet="Licensing">
+                <ScalarProperty Name="Licensing_ID" ColumnName="Licensing_ID" />
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+                <ScalarProperty Name="Is_Active" ColumnName="Is_Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Template">
+            <EntityTypeMapping TypeName="Mistletoe.Web.DataModel.Template">
+              <MappingFragment StoreEntitySet="Template">
+                <ScalarProperty Name="Template_ID" ColumnName="Template_ID" />
+                <ScalarProperty Name="Campaign_ID" ColumnName="Campaign_ID" />
+                <ScalarProperty Name="To_Addresses" ColumnName="To_Addresses" />
+                <ScalarProperty Name="From_Address" ColumnName="From_Address" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Body" ColumnName="Body" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

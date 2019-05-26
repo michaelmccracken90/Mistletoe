@@ -1,0 +1,346 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MistletoeDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="CampaignID" />
+          </Key>
+          <Property Name="CampaignID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CampaignName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="Frequency" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DataFilePath" Type="nvarchar" MaxLength="255" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Email_Address">
+          <Key>
+            <PropertyRef Name="EmailID" />
+          </Key>
+          <Property Name="EmailID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Template">
+          <Key>
+            <PropertyRef Name="TemplateID" />
+          </Key>
+          <Property Name="TemplateID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CampaignID" Type="int" Nullable="false" />
+          <Property Name="TemplateName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Subject" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Body" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Template_Email_Addresses">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateID" Type="int" Nullable="false" />
+          <Property Name="EmailID" Type="int" Nullable="false" />
+          <Property Name="IsSender" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsAdmin" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Campaign_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Template_Campaign">
+          <End Role="Campaign" Type="Self.Campaign" Multiplicity="1" />
+          <End Role="Template" Type="Self.Template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Campaign">
+              <PropertyRef Name="CampaignID" />
+            </Principal>
+            <Dependent Role="Template">
+              <PropertyRef Name="CampaignID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Template_Email_Addresses_Email_Address">
+          <End Role="Email_Address" Type="Self.Email_Address" Multiplicity="1" />
+          <End Role="Template_Email_Addresses" Type="Self.Template_Email_Addresses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Email_Address">
+              <PropertyRef Name="EmailID" />
+            </Principal>
+            <Dependent Role="Template_Email_Addresses">
+              <PropertyRef Name="EmailID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Template_Email_Addresses_Template">
+          <End Role="Template" Type="Self.Template" Multiplicity="1" />
+          <End Role="Template_Email_Addresses" Type="Self.Template_Email_Addresses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Template">
+              <PropertyRef Name="TemplateID" />
+            </Principal>
+            <Dependent Role="Template_Email_Addresses">
+              <PropertyRef Name="TemplateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MistletoeDataModelStoreContainer">
+          <EntitySet Name="Campaign" EntityType="Self.Campaign" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Email_Address" EntityType="Self.Email_Address" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Template" EntityType="Self.Template" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Template_Email_Addresses" EntityType="Self.Template_Email_Addresses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Campaign_User" Association="Self.FK_Campaign_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Template_Campaign" Association="Self.FK_Template_Campaign">
+            <End Role="Campaign" EntitySet="Campaign" />
+            <End Role="Template" EntitySet="Template" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Template_Email_Addresses_Email_Address" Association="Self.FK_Template_Email_Addresses_Email_Address">
+            <End Role="Email_Address" EntitySet="Email_Address" />
+            <End Role="Template_Email_Addresses" EntitySet="Template_Email_Addresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Template_Email_Addresses_Template" Association="Self.FK_Template_Email_Addresses_Template">
+            <End Role="Template" EntitySet="Template" />
+            <End Role="Template_Email_Addresses" EntitySet="Template_Email_Addresses" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MistletoeDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MistletoeDataEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Campaign" EntityType="MistletoeDataModel.Campaign" />
+          <EntitySet Name="User" EntityType="MistletoeDataModel.User" />
+          <AssociationSet Name="FK_Campaign_User" Association="MistletoeDataModel.FK_Campaign_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <EntitySet Name="Email_Address" EntityType="MistletoeDataModel.Email_Address" />
+          <EntitySet Name="Template" EntityType="MistletoeDataModel.Template" />
+          <EntitySet Name="Template_Email_Addresses" EntityType="MistletoeDataModel.Template_Email_Addresses" />
+          <AssociationSet Name="FK_Template_Campaign" Association="MistletoeDataModel.FK_Template_Campaign">
+            <End Role="Campaign" EntitySet="Campaign" />
+            <End Role="Template" EntitySet="Template" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Template_Email_Addresses_Email_Address" Association="MistletoeDataModel.FK_Template_Email_Addresses_Email_Address">
+            <End Role="Email_Address" EntitySet="Email_Address" />
+            <End Role="Template_Email_Addresses" EntitySet="Template_Email_Addresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Template_Email_Addresses_Template" Association="MistletoeDataModel.FK_Template_Email_Addresses_Template">
+            <End Role="Template" EntitySet="Template" />
+            <End Role="Template_Email_Addresses" EntitySet="Template_Email_Addresses" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="CampaignID" />
+          </Key>
+          <Property Name="CampaignID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CampaignName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Frequency" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DataFilePath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="MistletoeDataModel.FK_Campaign_User" FromRole="Campaign" ToRole="User" />
+          <NavigationProperty Name="Template" Relationship="MistletoeDataModel.FK_Template_Campaign" FromRole="Campaign" ToRole="Template" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsAdmin" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Campaign" Relationship="MistletoeDataModel.FK_Campaign_User" FromRole="User" ToRole="Campaign" />
+        </EntityType>
+        <Association Name="FK_Campaign_User">
+          <End Type="MistletoeDataModel.User" Role="User" Multiplicity="1" />
+          <End Type="MistletoeDataModel.Campaign" Role="Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Email_Address">
+          <Key>
+            <PropertyRef Name="EmailID" />
+          </Key>
+          <Property Name="EmailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Template_Email_Addresses" Relationship="MistletoeDataModel.FK_Template_Email_Addresses_Email_Address" FromRole="Email_Address" ToRole="Template_Email_Addresses" />
+        </EntityType>
+        <EntityType Name="Template">
+          <Key>
+            <PropertyRef Name="TemplateID" />
+          </Key>
+          <Property Name="TemplateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CampaignID" Type="Int32" Nullable="false" />
+          <Property Name="TemplateName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Subject" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Body" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Campaign" Relationship="MistletoeDataModel.FK_Template_Campaign" FromRole="Template" ToRole="Campaign" />
+          <NavigationProperty Name="Template_Email_Addresses" Relationship="MistletoeDataModel.FK_Template_Email_Addresses_Template" FromRole="Template" ToRole="Template_Email_Addresses" />
+        </EntityType>
+        <EntityType Name="Template_Email_Addresses">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateID" Type="Int32" Nullable="false" />
+          <Property Name="EmailID" Type="Int32" Nullable="false" />
+          <Property Name="IsSender" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Email_Address" Relationship="MistletoeDataModel.FK_Template_Email_Addresses_Email_Address" FromRole="Template_Email_Addresses" ToRole="Email_Address" />
+          <NavigationProperty Name="Template" Relationship="MistletoeDataModel.FK_Template_Email_Addresses_Template" FromRole="Template_Email_Addresses" ToRole="Template" />
+        </EntityType>
+        <Association Name="FK_Template_Campaign">
+          <End Type="MistletoeDataModel.Campaign" Role="Campaign" Multiplicity="1" />
+          <End Type="MistletoeDataModel.Template" Role="Template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Campaign">
+              <PropertyRef Name="CampaignID" />
+            </Principal>
+            <Dependent Role="Template">
+              <PropertyRef Name="CampaignID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Template_Email_Addresses_Email_Address">
+          <End Type="MistletoeDataModel.Email_Address" Role="Email_Address" Multiplicity="1" />
+          <End Type="MistletoeDataModel.Template_Email_Addresses" Role="Template_Email_Addresses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Email_Address">
+              <PropertyRef Name="EmailID" />
+            </Principal>
+            <Dependent Role="Template_Email_Addresses">
+              <PropertyRef Name="EmailID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Template_Email_Addresses_Template">
+          <End Type="MistletoeDataModel.Template" Role="Template" Multiplicity="1" />
+          <End Type="MistletoeDataModel.Template_Email_Addresses" Role="Template_Email_Addresses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Template">
+              <PropertyRef Name="TemplateID" />
+            </Principal>
+            <Dependent Role="Template_Email_Addresses">
+              <PropertyRef Name="TemplateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MistletoeDataModelStoreContainer" CdmEntityContainer="MistletoeDataEntities">
+          <EntitySetMapping Name="Campaign">
+            <EntityTypeMapping TypeName="MistletoeDataModel.Campaign">
+              <MappingFragment StoreEntitySet="Campaign">
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="DataFilePath" ColumnName="DataFilePath" />
+                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="CampaignName" ColumnName="CampaignName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="MistletoeDataModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Email_Address">
+            <EntityTypeMapping TypeName="MistletoeDataModel.Email_Address">
+              <MappingFragment StoreEntitySet="Email_Address">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailID" ColumnName="EmailID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Template">
+            <EntityTypeMapping TypeName="MistletoeDataModel.Template">
+              <MappingFragment StoreEntitySet="Template">
+                <ScalarProperty Name="Body" ColumnName="Body" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
+                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
+                <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Template_Email_Addresses">
+            <EntityTypeMapping TypeName="MistletoeDataModel.Template_Email_Addresses">
+              <MappingFragment StoreEntitySet="Template_Email_Addresses">
+                <ScalarProperty Name="IsSender" ColumnName="IsSender" />
+                <ScalarProperty Name="EmailID" ColumnName="EmailID" />
+                <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

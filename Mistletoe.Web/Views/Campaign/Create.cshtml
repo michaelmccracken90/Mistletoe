@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "Create Campaign";
+}
+
+<div class="container">
+    <h2>Create  Campaign</h2>
+    <script src="~/Scripts/Campaign/CampaignCreate.js"></script>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Enter Campaign details</h3>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2">Campaign name:</label>
+                    <div class="col-sm-10">
+                        <input id="tb_Name" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">Start date:</label>
+                    <div class="col-sm-10">
+                        <input id="tb_Start_Date" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">End date:</label>
+                    <div class="col-sm-10">
+                        <input id="tb_End_Date" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">Frequency:</label>
+                    <div class="col-sm-10">
+                        <div class="div_Frequency"></div>
+                        <span class="span_Frequency" style="display:none"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2">Data file:</label>
+                    <div class="col-sm-10">
+                        <input name="UploadFile" id="txtUploadFile" type="file" accept=".xlsx,.xls">
+                        <input id="hdn_UploadFilePath" type="hidden">
+                        <div id="div_UploadingStatus"></div>
+                    </div>
+                </div>
+                <div id="div_Loading" class="form-group" style="text-align: center; display: none;">
+                    <img src="~/Images/loading.gif" style="height:300px; width:300px" />
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="javascript:CreateCampaign()" class="btn btn-primary">Create &raquo;</button>
+                        <input class="btn btn-default" type="button" value="Cancel" onclick="javascript:Cancel()">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mistletoe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="div_ModalMessage" class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
