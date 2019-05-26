@@ -1,5 +1,6 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+Email Management Platform using Software as a Service (Authentication and Email). 
+Simple campaign handling with recurring jobs and audit trail.
 
 # Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
