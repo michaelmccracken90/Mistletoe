@@ -32,8 +32,8 @@
 
             userModel1 = new UserModel
             {
-                UserName = "RiteshRanga",
-                Email = "ritesh.ranga@mossandlichens.com",
+                UserName = "Superman",
+                Email = "superman@heroes.com",
                 IsActive = true,
                 IsAdmin = true,
                 UserID = "User1"
@@ -41,8 +41,8 @@
 
             userModel2 = new UserModel
             {
-                UserName = "RanjithVenkatesh",
-                Email = "ranjith.venkatesh@mossandlichens.com",
+                UserName = "Wonderwoman",
+                Email = "wonderwoman@heroes.com",
                 IsActive = false,
                 IsAdmin = true,
                 UserID = "User2"
@@ -50,8 +50,8 @@
 
             user1 = new User
             {
-                UserName = "RiteshRanga",
-                Email = "ritesh.ranga@mossandlichens.com",
+                UserName = "Superman",
+                Email = "superman@heroes.com",
                 IsActive = true,
                 IsAdmin = true,
                 UserID = "User1"
@@ -59,8 +59,8 @@
 
             user2 = new User
             {
-                UserName = "RanjithVenkatesh",
-                Email = "ranjith.venkatesh@mossandlichens.com",
+                UserName = "Wonderwoman",
+                Email = "wonderwoman@heroes.com",
                 IsActive = false,
                 IsAdmin = true,
                 UserID = "User2"
