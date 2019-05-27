@@ -28,7 +28,16 @@
 
         public UserManagerTests() 
         {
-            AutoMapperConfig.RegisterMapping();
+            AutoMapper.Mapper.Initialize(config =>
+            {
+                config.CreateMap<string, int>().ConvertUsing(stringValue => Convert.ToInt32(stringValue));
+                config.CreateMap<int, string>().ConvertUsing(intValue => Convert.ToString(intValue));
+                config.CreateMap<Campaign, CampaignModel>().ReverseMap();
+                config.CreateMap<Template, TemplateModel>().ReverseMap();
+                config.CreateMap<User, UserModel>().ReverseMap();
+                config.CreateMap<Email_Address, EmailAddressModel>().ReverseMap();
+                config.CreateMap<Template_Email_Addresses, TemplateEmailAddressesModel>().ReverseMap();
+            });
 
             userModel1 = new UserModel
             {
@@ -104,6 +113,7 @@
         {
             allUserModels = null;
             activeUserModels = null;
+            AutoMapper.Mapper.Reset();
         }        
 
         [Fact()]
