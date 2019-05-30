@@ -78,3 +78,6 @@
 /Mistletoe.Models/bin/Debug
 /Mistletoe.Models/obj/Debug
 /Mistletoe.Web.Data/PostDeployment/AddDBUser.sql
+/Mistletoe.Exporter/obj
+/Mistletoe.Email/obj
+/Mistletoe.HangfireServer/obj
