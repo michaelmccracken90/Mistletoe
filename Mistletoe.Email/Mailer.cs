@@ -4,11 +4,11 @@
 namespace Mistletoe.Email
 {
     using System;
+    using System.Configuration;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using Mailjet.Client;
     using Mailjet.Client.Resources;
-    using Mistletoe.Email.Properties;
     using Newtonsoft.Json.Linq;
     using NLog;
 
@@ -26,7 +26,7 @@ namespace Mistletoe.Email
         /// <returns>Mail response</returns>
         public static async Task<MailerResponse> SendEmailAsync(MailMessage mailMessage)
         {
-            var client = new MailjetClient(Config.MailjetAPIKey, Config.MailjetSecretKey);
+            var client = new MailjetClient(ConfigurationManager.AppSettings["MailjetAPIKey"], ConfigurationManager.AppSettings["MailjetSecretKey"]);
             var recipientValue = new JArray
                 {
                     new JObject
